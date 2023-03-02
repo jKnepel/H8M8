@@ -1,0 +1,22 @@
+.chart {
+    &__tooltip {
+        background-color: var(--mantine-color-gray-2);
+        opacity: 0.8;
+        border: 1px solid var(--mantine-color-gray-4);
+        padding: 5px;
+
+        &-header {
+            font-weight: bold;
+            border-bottom: 1px solid var(--mantine-color-gray-4);
+        }
+
+        &-dataHeader {
+            margin: 0;
+            font-weight: bold;
+        }
+
+        &-dataLabel {
+            margin: 0;
+        }
+    }
+}

@@ -1,0 +1,10 @@
+.wbs-page-heading {
+    position: relative;
+    margin-bottom: var(--mantine-spacing-md);
+
+    &__helper {
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+}

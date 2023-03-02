@@ -1,0 +1,7 @@
+@import "../../utils/animations";
+
+.wbs-signin-container {
+  margin-top: 8vh;
+  width: min(400px, 95%);
+  animation: slide-in-top 0.5s cubic-bezier(0, 0, 0, 1) both;
+}

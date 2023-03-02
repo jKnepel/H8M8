@@ -1,0 +1,12 @@
+flask
+six
+python-jose
+nltk
+flask-cors
+pandas
+pymongo
+pymongo[srv]
+validators
+scikit-learn
+scipy
+matplotlib

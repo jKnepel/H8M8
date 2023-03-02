@@ -1,0 +1,30 @@
+.wbs-moderation-reported-message {
+  border: 1px solid var(--mantine-color-gray-3);
+  border-left: 10px solid var(--mantine-color-gray-1);
+  border-radius: var(--mantine-radius-md);
+  margin: 10px 0;
+  padding: 4px 4px 4px 10px;
+  background-color: var(--mantine-color-white);
+
+  &--archived {
+    border-left: 10px solid var(--mantine-color-gray-5);
+    animation: slide-in-left 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  }
+
+  &--active {
+    border-left: 10px solid var(--mantine-color-violet-5);
+  }
+}
+
+@keyframes slide-in-left {
+  0% {
+    background-color: var(--mantine-color-violet-3);
+    transform: translateX(-100px);
+    opacity: 0;
+  }
+  100% {
+    background-color: var(--mantine-color-white);
+    transform: translateX(0px);
+    opacity: 1;
+  }
+}

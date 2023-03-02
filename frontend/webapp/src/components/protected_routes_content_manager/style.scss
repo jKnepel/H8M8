@@ -1,0 +1,52 @@
+@import "../../utils/mixins";
+@import "../../utils/bg_patterns";
+@import "../../components/protected_routes_navigation/dimensions";
+
+.wbs-public-page-content-manager {
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+
+  @include bg-pattern(dots);
+  /* background-color: #f7f7f7; */
+
+  &__main-content {
+    background-color: white;
+    z-index: 5;
+    border-radius: 30px 0 0 30px; //20px 0 0 20px;
+    height: 100%;
+
+    @include responsive(phone) {
+      border-radius: 30px 30px 0 0; //20px 20px 0 0;
+      height: calc(100% - $dashboard-sidebar-phone-height--collapsed);
+    }
+
+    position: absolute;
+    inset: 0;
+    transition: inset 0.5s;
+    border-left: 1px solid #1212121f;
+    box-shadow: 0 0 8px 2px #00000012;
+
+    &--expanded {
+      left: $dashboard-sidebar-desktop-width--expanded;
+      top: 0;
+
+      @include responsive(phone) {
+        width: 100%;
+        top: $dashboard-sidebar-phone-height--expanded;
+        left: 0;
+      }
+    }
+
+    &--collapsed {
+      left: $dashboard-sidebar-desktop-width--collapsed;
+      top: 0;
+
+      @include responsive(phone) {
+        width: 100%;
+        top: $dashboard-sidebar-phone-height--collapsed;
+        left: 0;
+      }
+    }
+  }
+}

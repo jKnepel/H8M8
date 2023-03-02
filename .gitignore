@@ -1,0 +1,13 @@
+__pycache__
+*.pyc
+
+Scripts/
+pyvenv.cfg
+
+*.env
+
+.idea
+
+#VSCode
+.vscode
+

@@ -1,0 +1,15 @@
+services:
+  hatemateb:
+    image: ${DOCKER_REPO}/${H8M8_BACKEND_IMAGE}
+    container_name: h8m8_rest_service
+    environment:
+      DATABASE_USER: ${DATABASE_USER}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      DATABASE_HOST: ${DATABASE_HOST}
+      DATABASE_PORT: ${DATABASE_PORT}
+  hatemate_frontend:
+    image: ${DOCKER_REPO}/${H8M8_FRONTEND_IMAGE}
+  bot:
+    image: ${DOCKER_REPO}/${H8M8_DISCORD_BOT_IMAGE}
+  classifier:
+    image:  ${DOCKER_REPO}/${CLASSIFIER_IMAGE}

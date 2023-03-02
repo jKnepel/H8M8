@@ -1,0 +1,11 @@
+node_modules/
+.parcel-cache/
+dist/
+*.log
+.idea/
+report.html
+*.orig
+coverage/
+.env.production
+.env.development
+.env

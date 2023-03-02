@@ -1,0 +1,33 @@
+@import "../../utils/mixins";
+
+.wbs-profile-container {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+
+  @include responsive(tablet) {
+    gap: 30px;
+  }
+
+  @include responsive(desktop) {
+    gap: 60px;
+  }
+
+  @include responsive(phone) {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  &__divider {
+    @include responsive(phone) {
+      display: none;
+    }
+  }
+
+  &__att-item {
+    @include responsive(phone) {
+      text-align: center;
+    }
+  }
+}

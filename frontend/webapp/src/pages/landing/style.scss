@@ -1,0 +1,39 @@
+.wbs-landing-header__logo {
+  filter: saturate(0);
+  transition: filter 0.5s;
+
+  &:hover {
+    filter: saturate(1);
+  }
+}
+
+.wbs-landing-header-primary-text {
+  height: 25px;
+  overflow: hidden;
+
+  & > div {
+    height: 25px;
+
+    &:first-child {
+      animation: text-animation 8s infinite;
+    }
+  }
+}
+
+@keyframes text-animation {
+  0% {
+    margin-top: 0;
+  }
+  20% {
+    margin-top: 0;
+  }
+  33% {
+    margin-top: -25px;
+  }
+  63% {
+    margin-top: -25px;
+  }
+  76% {
+    margin-top: 0;
+  }
+}

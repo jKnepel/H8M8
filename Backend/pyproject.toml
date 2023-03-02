@@ -1,0 +1,4 @@
+[tool.pylint.messages_control]
+disable = ["import-error", "E1101"]
+max-line-length = 120
+ignore = "migrations"

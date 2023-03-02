@@ -1,0 +1,80 @@
+services:
+  classifier:
+    container_name: h8m8_classifier
+    hostname: classifier
+    build:
+      context: ../classifier
+      dockerfile: Dockerfile
+  bot:
+    container_name: discord_bot
+    hostname: discord-bot
+    build:
+      context: ../bot
+      dockerfile: Dockerfile
+    environment:
+      H8M8_BACKEND_URL: http://hatemate-backend:${HATEMATE_BACKEND_PORT}
+      BOT_PORT: ${BOT_PORT}
+      DISCORD_TOKEN: ${DISCORD_TOKEN}
+    depends_on:
+      hatemateb:
+        condition: service_healthy
+  hatemateb:
+    container_name: hatemate_backend
+    hostname: hatemate-backend
+    build:
+       context: ../Backend
+       dockerfile: Dockerfile
+    command: >
+      bash -c "python manage.py migrate
+      && python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - "${HATEMATE_BACKEND_PORT}:8000"
+    environment:
+      CLASSIFIER_URL: ${CLASSIFIER_URL}
+      DATABASE_HOST: ${DATABASE_HOST}
+      DATABASE_PORT: ${DATABASE_PORT}
+      DATABASE_USER: ${DATABASE_USER}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      DATABASE_NAME: ${DATABASE_NAME}
+      SECRET_KEY: ${DATABASE_PASSWORD}
+      BOT_DELETE_MESSAGE_URL: ${BOT_DELETE_URL}:${BOT_PORT}${BOT_DELETE_URI}
+      SESSION_ALIVE_INTERVAL: ${SESSION_ALIVE_INTERVAL}
+      DISABLE_BOT_RESPONSE: ${DISABLE_BOT_RESPONSE}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS}
+    healthcheck:
+      test: "curl --fail --silent --write-out 'HTTP CODE : %{http_code}\n' --output /dev/null http://127.0.0.1:8000/admin/login/"
+      interval: 2s
+      timeout: 10s
+      retries: 30
+    depends_on:
+      postgres:
+        condition: service_healthy
+  hatemate_frontend:
+    container_name: hatemate_frontend
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    ports:
+      - "${HATEMATE_FRONTEND_PORT}:80"
+    depends_on:
+      hatemateb:
+        condition: service_healthy
+  postgres:
+    container_name: h8m8_db
+    hostname: h8m8-db
+    image: postgres:15.1-alpine
+    environment:
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_DB: ${DATABASE_NAME}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 1s
+      timeout: 5s
+      retries: 10
+    ports:
+      - "${DATABASE_PORT}:5432"
+    volumes:
+      - psql_data:/var/lib/postgresql/data
+volumes:
+  psql_data:

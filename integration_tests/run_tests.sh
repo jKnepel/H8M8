@@ -1,0 +1,1 @@
+python3 -m robot -L DEBUG -v "BACKEND_HOST:http://localhost:8000" -d robot_results .

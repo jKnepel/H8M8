@@ -1,0 +1,132 @@
+@import "../../utils/mixins";
+
+.cgo-item {
+  &__header {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    @include responsive(phone-up) {
+      flex-direction: row;
+    }
+
+    &-icon {
+      display: flex;
+      align-items: center;
+      margin-right: 10px;
+      border-radius: 15px;
+      padding: 5px;
+      border: solid 2px;
+      color: #999999;
+      background: #8d8d8d1a;
+      border-color: #e7e7e7;
+
+      &--discord {
+        color: #7289da;
+        background: #7289da1a;
+        border-color: #7289da;
+      }
+
+      &--telegram {
+        color: #29a0da;
+        background: #63ceff1c;
+        border-color: #87cef1;
+      }
+    }
+
+    &-title-container {
+      display: flex;
+      align-items: center;
+      flex-grow: 1;
+
+      &__title {
+        font-weight: 500;
+        color: var(--mantine-color-gray-9);
+      }
+
+      &__subtitle {
+        font-weight: 500;
+        color: var(--mantine-color-gray-7);
+      }
+    }
+
+    &-divider {
+      margin: 0 10px;
+    }
+  }
+
+  &__content {
+    margin: 15px -8px 10px -8px;
+  }
+
+  &__indicator {
+    flex-grow: 1;
+  }
+
+  &__title {
+    font-weight: 500;
+    color: var(--mantine-color-gray-7);
+    position: absolute;
+    top: -5px;
+    left: 30px;
+    background-color: white;
+    z-index: 2;
+    padding: 0 5px;
+  }
+
+  &__indicator-wrapper {
+    display: flex;
+    border: solid 1px var(--mantine-color-gray-4);
+    padding: 10px 10px 0 10px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom: none;
+    flex-direction: column;
+
+    @include responsive(phone-up) {
+      flex-direction: row;
+    }
+  }
+
+  &__indicator-container {
+    display: flex;
+    align-items: start;
+    flex: 1 1 0;
+    padding: 15px 10px;
+  }
+
+  &__indicator-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+    border-radius: 10px;
+    padding: 5px;
+    color: var(--mantine-color-gray-7);
+    background: var(--mantine-color-gray-2);
+  }
+
+  &__indicator-name {
+    color: var(--mantine-color-gray-5);
+  }
+
+  &__progress {
+    background: var(--mantine-color-teal-7);
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    overflow: hidden;
+  }
+
+  &__progress-inner {
+    height: 8px;
+    background: var(--mantine-color-red-7);
+  }
+
+  &__action {
+    text-align: right;
+  }
+
+  &__header-statusicon {
+    margin-left: 10px;
+  }
+}

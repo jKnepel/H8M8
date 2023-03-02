@@ -1,0 +1,111 @@
+stages:
+  - linting
+  - test
+  - build
+  - deploy
+pylint:
+  image: python:3.7.16-slim-bullseye
+  stage: linting
+  script:
+    - pip install pylint
+    - cd Backend
+    - find . -type f -name "*.py" | xargs pylint --fail-under=6
+  only:
+    changes:
+      - Backend/**/*
+  allow_failure: true
+build-classifier-image:
+  image: docker:18.09.7-dind
+  stage: build
+  script:
+    - cd classifier
+    - docker build -t gitlab.rz.htw-berlin.de:5050/peikert/systemsdevelopmentws22-ai-moderation/classifier:0.1 .
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker push gitlab.rz.htw-berlin.de:5050/peikert/systemsdevelopmentws22-ai-moderation/classifier:0.1
+  only:
+    changes:
+      - classifier/**/*
+    refs:
+      - develop
+backend-healthcheck:
+  image: docker:latest
+  services:
+    - docker:dind
+  stage: test
+  before_script:
+    - apk add --no-cache py-pip
+    - pip install docker-compose
+    - pip install -r integration_tests/requirements-test.txt
+  script:
+    - cp docker_compose/.env.template integration_tests/.env
+    - export SECRET_KEY='$DJANGO_SECRET_KEY'
+    - export HATEMATE_BACKEND_PORT=8001
+    - export DISABLE_BOT_RESPONSE=True
+    - docker compose -f integration_tests/docker-compose-test.yml up --build -d
+    - docker ps
+    - docker exec hatemate_backend-test /bin/bash -c "export DJANGO_SUPERUSER_PASSWORD=admin && python manage.py createsuperuser --noinput --username admin --email test@test.org"
+    - python3 -m robot -L DEBUG -v "BACKEND_HOST:http://sdf1.f4.htw-berlin.de:8001" -d robot_results integration_tests
+  after_script:
+    - - docker compose -f integration_tests/docker-compose-test.yml down
+  artifacts:
+    paths:
+      - robot_results
+  only:
+    changes:
+      - Backend/**/*
+      - integration_tests/**/*
+build-h8m8-backend-image:
+  image: docker:18.09.7-dind
+  stage: build
+  script:
+    - cd Backend
+    - docker build -t gitlab.rz.htw-berlin.de:5050/peikert/systemsdevelopmentws22-ai-moderation/h8m8-backend:latest .
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker push gitlab.rz.htw-berlin.de:5050/peikert/systemsdevelopmentws22-ai-moderation/h8m8-backend:latest
+  only:
+    changes:
+      - Backend/**/*
+    refs:
+      - develop
+build-h8m8-frontend-image:
+  image: docker:18.09.7-dind
+  stage: build
+  script:
+    - cd frontend
+    - docker build -t gitlab.rz.htw-berlin.de:5050/peikert/systemsdevelopmentws22-ai-moderation/h8m8-frontend:latest .
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker push gitlab.rz.htw-berlin.de:5050/peikert/systemsdevelopmentws22-ai-moderation/h8m8-frontend:latest
+  only:
+    changes:
+      - frontend/**/*
+    refs:
+      - develop
+build-h8m8-discord-bot-image:
+  image: docker:18.09.7-dind
+  stage: build
+  script:
+    - cd bot
+    - docker build -t gitlab.rz.htw-berlin.de:5050/peikert/systemsdevelopmentws22-ai-moderation/h8m8-discord-bot:latest .
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker push gitlab.rz.htw-berlin.de:5050/peikert/systemsdevelopmentws22-ai-moderation/h8m8-discord-bot:latest
+  only:
+    changes:
+      - bot/**/*
+    refs:
+      - develop
+trigger-jenkins-job:
+  image: python
+  stage: deploy
+  script:
+    - curl -i -X POST --user gitlab_ci_user:$jenkins_access_token $JENKINS_URL/job/deploy-classifier/build
+    - cd ci
+    - pip install requests
+    - python3 jenkins_job_status.py gitlab_ci_user $jenkins_access_token $JENKINS_URL job/deploy-classifier
+  only:
+    changes:
+      - classifier/**/*
+      - frontend/**/*
+      - Backend/**/*
+      - docker_compose/**/*
+    refs:
+      - develop

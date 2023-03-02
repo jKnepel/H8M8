@@ -1,0 +1,7 @@
+services:
+  classifier:
+    ports:
+      - "${CLASSIFIER_PORT}:3000"
+  bot:
+    ports: 
+      - "${BOT_PORT}:5000"
