@@ -1,5 +1,7 @@
 # H8M8
 
+Student project for Systemsdevelopment @ HTW. Was developed in a Team of 10 students.
+
 # Setup and Run Backend using docker compose
 
 ## Development deployment
